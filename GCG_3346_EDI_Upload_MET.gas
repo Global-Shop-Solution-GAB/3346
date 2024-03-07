@@ -1,0 +1,975 @@
+Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("GCG EDI Upload SNP Discrepancies")
+gui.Form1..size(7770,4650)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(True)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(True)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.gsflexgrid1.create(gsflexgrid)
+gui.Form1.gsflexgrid1.FixedRows(0)
+gui.Form1.gsflexgrid1.FixedCols(0)
+gui.Form1.gsflexgrid1.visible(True)
+gui.Form1.gsflexgrid1.size(7140,3210)
+gui.Form1.gsflexgrid1.zorder(0)
+gui.Form1.gsflexgrid1.position(200,200)
+gui.Form1.gsflexgrid1.enabled(True)
+gui.Form1.gsflexgrid1.event(cellenter,gsflexgrid1_cellenter)
+gui.Form1.cmdUpdate.create(button)
+gui.Form1.cmdUpdate.caption("Update")
+gui.Form1.cmdUpdate.visible(True)
+gui.Form1.cmdUpdate.size(855,375)
+gui.Form1.cmdUpdate.zorder(0)
+gui.Form1.cmdUpdate.position(190,3530)
+gui.Form1.cmdUpdate.enabled(True)
+gui.Form1.cmdUpdate.fontname("Arial")
+gui.Form1.cmdUpdate.fontsize(8)
+gui.Form1.cmdUpdate.event(click,cmdupdate_click)
+
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.UDT.File.Define("Discontinued",String)
+Variable.UDT.File.Define("Status",String)
+Variable.UDT.File.Define("Pickup",String)
+Variable.UDT.File.Define("Deliver",String)
+Variable.UDT.File.Define("PO",String)
+Variable.UDT.File.Define("Item",String)
+Variable.UDT.File.Define("Description",String)
+Variable.UDT.File.Define("Ordered",Long)
+Variable.UDT.File.Define("InTransit",Long)
+Variable.UDT.File.Define("Receipts",Long)
+Variable.UDT.File.Define("NetDue",Long)
+Variable.UDT.File.Define("SNP",Long)
+Variable.UDT.File.Define("Container",String)
+Variable.UDT.File.Define("ShipTo",String)
+Variable.uGlobal.uFile.Declare("File")
+
+
+Variable.UDT.InvCopy.Define("Discontinued",String)
+Variable.UDT.InvCopy.Define("Status",String)
+Variable.UDT.InvCopy.Define("Pickup",String)
+Variable.UDT.InvCopy.Define("Deliver",String)
+Variable.UDT.InvCopy.Define("PO",String)
+Variable.UDT.InvCopy.Define("Item",String)
+Variable.UDT.InvCopy.Define("Description",String)
+Variable.UDT.InvCopy.Define("Ordered",Long)
+Variable.UDT.InvCopy.Define("InTransit",Long)
+Variable.UDT.InvCopy.Define("Receipts",Long)
+Variable.UDT.InvCopy.Define("NetDue",Long)
+Variable.UDT.InvCopy.Define("SNP",Long)
+Variable.UDT.InvCopy.Define("Container",String)
+Variable.UDT.InvCopy.Define("ShipTo",String)
+Variable.uGlobal.uInvCopy.Declare("InvCopy")
+
+
+Variable.UDT.POCopy.Define("Discontinued",String)
+Variable.UDT.POCopy.Define("Status",String)
+Variable.UDT.POCopy.Define("Pickup",String)
+Variable.UDT.POCopy.Define("Deliver",String)
+Variable.UDT.POCopy.Define("PO",String)
+Variable.UDT.POCopy.Define("Item",String)
+Variable.UDT.POCopy.Define("Description",String)
+Variable.UDT.POCopy.Define("Ordered",Long)
+Variable.UDT.POCopy.Define("InTransit",Long)
+Variable.UDT.POCopy.Define("Receipts",Long)
+Variable.UDT.POCopy.Define("NetDue",Long)
+Variable.UDT.POCopy.Define("SNP",Long)
+Variable.UDT.POCopy.Define("Container",String)
+Variable.UDT.POCopy.Define("ShipTo",String)
+Variable.uGlobal.uPOCopy.Declare("POCopy")
+
+Variable.UDT.InvMstr.Define("Part",String,Part)
+Variable.UDT.InvMstr.Define("Text_Info1",String,Text_Info1)
+Variable.UDT.InvMstr.Define("Text_Info2",String,Text_Info2)
+Variable.uGlobal.uInvMstr.Declare("InvMstr")
+
+Variable.UDT.PO.Define("Customer_PO",String,Customer_PO)
+Variable.UDT.PO.Define("Order_No",String,Order_No)
+Variable.UDT.PO.Define("Date_Item_Prom",Date)
+Variable.UDT.PO.Define("Part",String)
+Variable.uGlobal.uPO.Declare("PO")
+
+Variable.UDT.POLine.Define("Order_No",String,Order_No)
+Variable.UDT.POLine.Define("Date_Item_Prom",Date,Date_Item_Prom,"YYYYMMDD")
+Variable.UDT.POLine.Define("Part",String,Part)
+Variable.uGlobal.uPOLine.Declare("POLine")
+
+Variable.UDT.UplEx.Define("Trmnl",String,Trmnl)
+Variable.UDT.UplEx.Define("Part",String,Part)
+Variable.UDT.UplEx.Define("Discr_Code",String,Discr_Code)
+Variable.UDT.UplEx.Define("Discrepancy",String,Discrepancy)
+Variable.UDT.UplEx.Define("Prev_Value",String,Prev_Value)
+Variable.UDT.UplEx.Define("Chng_Value",String,Chng_Value)
+Variable.UDT.UplEx.Define("PO",String,PO)
+Variable.UDT.UplEx.Define("Description",String,Description)
+Variable.UDT.UplEx.Define("Ordered",Float,Ordered)
+Variable.UDT.UplEx.Define("In_Transit",Float,In_Transit)
+Variable.UDT.UplEx.Define("Receipts",Float,Receipts)
+Variable.UDT.UplEx.Define("Net_Due",Float,Net_Due)
+Variable.UDT.UplEx.Define("SNP",Float,SNP)
+Variable.UDT.UplEx.Define("Container",String,Container)
+Variable.UDT.UplEx.Define("Ship_To",String,Ship_To)
+Variable.UDT.UplEx.Define("Deliver",String,Date_Due)
+Variable.uGlobal.uUplEx.Declare("UplEx")
+
+Variable.UDT.UplExCopy.Define("Trmnl",String,Trmnl)
+Variable.UDT.UplExCopy.Define("Part",String,Part)
+Variable.UDT.UplExCopy.Define("Discr_Code",String,Discr_Code)
+Variable.UDT.UplExCopy.Define("Discrepancy",String,Discrepancy)
+Variable.UDT.UplExCopy.Define("Prev_Value",String,Prev_Value)
+Variable.UDT.UplExCopy.Define("Chng_Value",String,Chng_Value)
+Variable.UDT.UplExCopy.Define("PO",String,PO)
+Variable.UDT.UplExCopy.Define("Description",String,Description)
+Variable.UDT.UplExCopy.Define("Ordered",Float,Ordered)
+Variable.UDT.UplExCopy.Define("In_Transit",Float,In_Transit)
+Variable.UDT.UplExCopy.Define("Receipts",Float,Receipts)
+Variable.UDT.UplExCopy.Define("Net_Due",Float,Net_Due)
+Variable.UDT.UplExCopy.Define("SNP",Float,SNP)
+Variable.UDT.UplExCopy.Define("Container",String,Container)
+Variable.UDT.UplExCopy.Define("Ship_To",String,Ship_To)
+Variable.UDT.UplExCopy.Define("Deliver",String,Date_Due)
+Variable.uGlobal.uUplExCopy.Declare("UplExCopy")
+
+
+Variable.Global.bAscSort.Declare(Boolean,True)
+Variable.Global.bChecked.Declare(Boolean,False)
+
+Program.Sub.Preflight.End
+
+
+Program.Sub.Main.Start
+
+F.ODBC.Connection!Con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+' make sure all udts are more than empty
+V.uGlobal.uFile.Redim(-1,-1)
+V.uGlobal.uInvCopy.Redim(-1,-1)
+V.uGlobal.uInvMstr.Redim(-1,-1)
+V.uGlobal.uPO.Redim(-1,-1)
+V.uGlobal.uPOCopy.Redim(-1,-1)
+V.uGlobal.uUplEx.Redim(-1,-1)
+V.uGlobal.uUplExCopy.Redim(-1,-1)
+
+V.Local.sSel.Declare(String)
+
+' clear data from table, for calling terminal
+F.Intrinsic.String.Concat("delete from GCG_3346_Upl_Exceptions where Trmnl='",V.Caller.Terminal,"' ",V.Local.sSel)
+F.ODBC.Connection!Con.Execute(V.Local.sSel)
+
+F.Intrinsic.Control.CallSub(Readfile)
+	F.Intrinsic.Control.If(V.uGlobal.uFile!Item.UBound,=,-1)
+		F.Intrinsic.Control.CallSub(Usrfldupdate)
+		F.Intrinsic.Control.CallSub(Unload)
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(Partpoverify)
+	F.Intrinsic.Control.If(V.uGlobal.uFile!Item.UBound,=,-1)
+		F.Intrinsic.Control.CallSub(Unload)
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Concat("Creating EA850",V.Caller.CompanyCode," File",V.Local.sSel)
+F.Intrinsic.UI.ChangeWaitStatus(V.Local.sSel)
+F.Intrinsic.Control.CallSub(Createupload)
+F.Intrinsic.Control.CallSub(Usrfldupdate)
+
+Program.Sub.Main.End
+
+
+Program.Sub.Unload.Start
+
+F.ODBC.Connection!Con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+
+Program.Sub.ReadFile.Start
+
+V.Local.sRet.Declare(String)
+V.Local.sVala.Declare(String)
+V.Local.sValb.Declare(String)
+V.Local.sData.Declare(String)
+V.Local.sLines.Declare(String)
+V.Local.iForA.Declare(Long)
+V.Local.iForB.Declare(Long)
+
+
+F.Intrinsic.UI.ShowOpenFileDialog("","","",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+
+	F.Intrinsic.UI.InvokeWaitDialog("Reading Upload File Information")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+
+	' incoming file could be xls or csv.  check to see which one
+	F.Intrinsic.String.Split(V.Local.sRet(0),".",V.Local.sValb)
+	V.Local.sVala.Set(V.Local.sValb(V.Local.sValb.UBound))
+
+	F.Intrinsic.Control.If(V.Local.sVala.UCase,=,"XLS")
+		F.Automation.MSExcel.ReadSpreadsheet(V.Local.sRet,V.Local.sData)
+		F.Intrinsic.String.Split(V.Local.sData,"&^&",V.Local.sData)
+		f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uFile,"Discontinued*!*Status*!*Pickup*!*Deliver*!*PO*!*Item*!*Description*!*Ordered*!*InTransit*!*Receipts*!*NetDue*!*SNP*!*Container*!*ShipTo",v.Local.sData(0),"$!$","*!*",false,1000)
+
+	F.Intrinsic.Control.elseIf(V.Local.sVala.UCase,=,"XLSX")
+		F.Automation.MSExcel.ReadSpreadsheet(V.Local.sRet,V.Local.sData)
+		F.Intrinsic.String.Split(V.Local.sData,"&^&",V.Local.sData)
+		f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uFile,"Discontinued*!*Status*!*Pickup*!*Deliver*!*PO*!*Item*!*Description*!*Ordered*!*InTransit*!*Receipts*!*NetDue*!*SNP*!*Container*!*ShipTo",v.Local.sData(0),"$!$","*!*",false,1000)
+
+	
+	F.Intrinsic.Control.ElseIf(V.Local.sVala.UCase,=,"CSV")
+		F.Intrinsic.File.File2String(V.Local.sRet,V.Local.sData)
+
+		' need to split as a true csv, then load it into a udt
+		F.Intrinsic.String.Split(V.Local.sData,V.Ambient.NewLine,V.Local.sLines)
+		V.uGlobal.uFile.Redim(V.Local.sLines.LBound,V.Local.sLines.UBound)
+
+		F.Intrinsic.Control.For(V.Local.iForA,V.Local.sLines.LBound,V.Local.sLines.UBound,1)
+			F.Intrinsic.String.SplitCSV(V.Local.sLines(V.Local.iForA),V.Local.sData)
+			V.Local.sData.RedimPRESERVE(0,13)
+			F.Intrinsic.Control.If(V.Local.sData(5).Trim,<>,"")
+				V.uGlobal.uFile(v.Local.iForA)!Container.Set(V.Local.sData(12))
+				V.uGlobal.uFile(v.Local.iForA)!Deliver.Set(V.Local.sData(3))
+				V.uGlobal.uFile(v.Local.iForA)!Description.Set(V.Local.sData(6))
+				V.uGlobal.uFile(v.Local.iForA)!Discontinued.Set(V.Local.sData(0))
+				V.uGlobal.uFile(v.Local.iForA)!InTransit.Set(V.Local.sData(8))
+				V.uGlobal.uFile(v.Local.iForA)!Item.Set(V.Local.sData(5))
+				V.uGlobal.uFile(v.Local.iForA)!NetDue.Set(V.Local.sData(10))
+				V.uGlobal.uFile(v.Local.iForA)!Ordered.Set(V.Local.sData(7))
+				V.uGlobal.uFile(v.Local.iForA)!Pickup.Set(V.Local.sData(2))
+				V.uGlobal.uFile(v.Local.iForA)!PO.Set(V.Local.sData(4))
+				V.uGlobal.uFile(v.Local.iForA)!Receipts.Set(V.Local.sData(9))
+				V.uGlobal.uFile(v.Local.iForA)!ShipTo.Set(V.Local.sData(13))
+				V.uGlobal.uFile(v.Local.iForA)!SNP.Set(V.Local.sData(11))
+				V.uGlobal.uFile(v.Local.iForA)!Status.Set(V.Local.sData(1))
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.Next(V.Local.iForA)
+
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.EndIf
+
+
+
+
+Program.Sub.ReadFile.End
+
+
+Program.Sub.PartPOVerify.Start
+
+V.Local.iFor.Declare(Long)
+V.Local.iForRet.Declare(Long)
+V.Local.sSel.Declare(String)
+V.Local.sRetA.Declare(String)
+V.Local.sRetB.Declare(String)
+V.Local.iRedim.Declare(Long)
+V.Local.sVal.Declare(String)
+V.Local.dDelivDte.Declare(Date)
+V.Local.sOrd.Declare(String)
+V.Local.sPending.Declare(String)
+V.Local.sMsg.Declare(String)
+
+' won't be doing anything with the "InTransit lines, afterall
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uFile!Status,"In Transit")
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFile)
+
+' don't need net = 0 lines
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uFile!NetDue,0)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFile)
+
+' get a copy of the incoming file data to compare unique part and po numbers
+F.Intrinsic.Variable.UDTCopy(V.uGlobal.uFile,V.uGlobal.uInvCopy,False)
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.uInvCopy!Item)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uInvCopy)
+
+F.Intrinsic.Variable.UDTCopy(V.uGlobal.uFile,V.uGlobal.uPOCopy,False)
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.uPOCopy!PO)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uPOCopy)
+
+' get all part info
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel","select Inventory_Mstr.Part, Text_Info1, Text_Info2 from Inventory_Mstr left outer join Inventory_Mst2 on Inventory_Mstr.Part = Inventory_Mst2.Part order by Inventory_Mstr.Part")
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","v.uGlobal.uInvMstr",False,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+' get PO numbers
+F.Intrinsic.String.Concat(V.Local.sSel,"select Order_no, Customer_PO from Order_Header where Record_Type ='A' order by Customer_PO",V.Local.sSel)
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel",V.Local.sSel)
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","v.uGlobal.uPO",False,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+' it's 1:30 on a Friday afternoon, and reseting this variable to be blank is easier than adding the "" for the next concat line
+V.Local.sSel.Set("")
+
+F.Intrinsic.String.Concat(V.Local.sSel,"select Order_no, Part, Date_Item_Prom from Order_Lines  ",V.Local.sSel)
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel",V.Local.sSel)
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","v.uGlobal.uPOLine",False,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+V.Local.sSel.Set("")
+F.Intrinsic.String.Concat(V.Local.sSel,"select Order_No,Customer_PO from Order_Hist_Head order by Customer_PO",V.Local.sSel)
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel",V.Local.sSel)
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","v.uGlobal.uPO",True,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+V.Local.sSel.Set("")
+F.Intrinsic.String.Concat(V.Local.sSel,"select Order_No, Part, Date_Due as Date_Item_Prom from Order_Hist_Line  ",V.Local.sSel)
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel",V.Local.sSel)
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","v.uGlobal.uPOLine",True,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+
+F.Intrinsic.UI.ChangeWaitStatus("Verifying Parts")
+' for each unique item, make sure it is an inventory part; start at 1 because 0 is file header
+F.Intrinsic.Control.For(V.Local.iFor,1,V.uGlobal.uInvCopy!Item.UBound,1)
+	F.Intrinsic.String.Concat("Verifying Parts",V.Ambient.NewLine,V.Local.iFor," of ",V.uGlobal.uInvCopy!Item.UBound,V.Local.sMsg)
+	F.Intrinsic.UI.ChangeWaitStatus(V.Local.sMsg)
+
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uInvMstr!Part,V.uGlobal.uInvCopy(v.Local.iFor)!Item,V.Local.sRetA)
+
+	' if the part is not found, look for that part on the main udt of information
+	' add those lines of information to the exception udt and flag them for deletion
+	F.Intrinsic.Control.If(V.Local.sRetA.Trim,=,"")
+		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uFile!Item,V.uGlobal.uInvCopy(v.Local.iFor)!Item,V.Local.sRetB)
+		F.Intrinsic.String.Split(V.Local.sRetB,"*!*",V.Local.sRetB)
+		F.Intrinsic.Control.For(V.Local.iForRet,V.Local.sRetB.LBound,V.Local.sRetB.UBound,1)
+		
+			F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Item,"*!*","INV","*!*","Invalid Inventory Part","*!*","","*!*","","*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!PO,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Description,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Ordered,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!InTransit,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Receipts,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!NetDue,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!SNP,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Container,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!ShipTo,"*!*",V.uGlobal.uFile(v.Local.sRetB(v.Local.iForRet))!Deliver,V.Local.sVal)
+			f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+		F.Intrinsic.Control.Next(V.Local.iForRet)
+
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uFile!Item,V.uGlobal.uInvCopy(v.Local.iFor)!Item)
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uInvCopy!Item,V.uGlobal.uInvCopy(v.Local.iFor)!Item)
+
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.iFor)
+F.Intrinsic.Debug.Stop
+
+' delete items hat have been flagged
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFile)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uInvCopy)
+
+' no need to continue here, if no records are left
+F.Intrinsic.Control.If(V.uGlobal.uFile!Item.UBound,=,-1)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.UI.ChangeWaitStatus("Verifying PO Lines")
+' for unique po, make sure it has not been previously used;  start at 1 because 0 is file header
+F.Intrinsic.Control.For(V.Local.iFor,1,V.uGlobal.uFile!PO.UBound,1)
+
+	F.Intrinsic.String.Concat("Verifying PO Lines",V.Ambient.NewLine,V.Local.iFor," of ",V.uGlobal.uFile!PO.UBound,V.Local.sMsg)
+	F.Intrinsic.UI.ChangeWaitStatus(V.Local.sMsg)
+
+
+	' don't compare for "Pending" PO
+	V.Local.sPending.Set(V.uGlobal.uFile(v.Local.iFor)!PO)
+	F.Intrinsic.Control.If(V.Local.sPending,<>,"PENDING")
+		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uPO!Customer_PO,V.uGlobal.uFile(v.Local.iFor)!PO,V.Local.sRetA)
+
+		' if the po is found, it has been used before.
+		F.Intrinsic.Control.If(V.Local.sRetA.Trim,<>,"")
+			F.Intrinsic.String.Split(V.Local.sRetA,"*!*",V.Local.sRetA)
+			V.Local.sOrd.Set(V.uGlobal.uPO(v.Local.sRetA)!Order_No)
+
+			' see if it's for the same part
+			F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uPOLine!Order_No,V.Local.sOrd,V.uGlobal.uPOLine!Part,V.uGlobal.uFile(v.Local.iFor)!Item,V.Local.sRetB)
+
+			' if po for same part is found, see if date is the same	
+			F.Intrinsic.Control.If(V.Local.sRetB.Trim,<>,"")
+				F.Intrinsic.String.Split(V.Local.sRetB,"*!*",V.Local.sRetB)
+
+				V.Local.dDelivDte.Set(V.uGlobal.uFile(v.Local.iFor)!Deliver)
+
+				' only print to exception, if not the same date
+				F.Intrinsic.Control.If(V.Local.dDelivDte,<>,V.uGlobal.uPOLine(v.Local.sRetB)!Date_Item_Prom)
+					F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(v.local.iFor)!Item,"*!*","CPO","*!*","Duplicate PO Number","*!*",V.uGlobal.uPOLine(v.Local.sRetB)!Date_Item_Prom,"*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,"*!*",V.uGlobal.uFile(v.local.iFor)!PO,"*!*",V.uGlobal.uFile(v.local.iFor)!Description,"*!*",V.uGlobal.uFile(v.local.iFor)!Ordered,V.Local.sVal)
+					F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.local.iFor)!InTransit,"*!*",V.uGlobal.uFile(v.local.iFor)!Receipts,"*!*",V.uGlobal.uFile(v.local.iFor)!NetDue,"*!*",V.uGlobal.uFile(v.local.iFor)!SNP,V.Local.sVal)
+					F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.local.iFor)!Container,"*!*",V.uGlobal.uFile(v.local.iFor)!ShipTo,"*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,V.Local.sVal)
+					f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+				F.Intrinsic.Control.EndIf
+
+			F.Intrinsic.Control.Else
+
+				' add those lines of information to the exception udt and flag them for deletion
+				F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(v.local.iFor)!Item,"*!*","CPO","*!*","Duplicate PO Number","*!*","N/A","*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,"*!*",V.uGlobal.uFile(v.local.iFor)!PO,"*!*",V.uGlobal.uFile(v.local.iFor)!Description,"*!*",V.uGlobal.uFile(v.local.iFor)!Ordered,V.Local.sVal)
+				F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.local.iFor)!InTransit,"*!*",V.uGlobal.uFile(v.local.iFor)!Receipts,"*!*",V.uGlobal.uFile(v.local.iFor)!NetDue,"*!*",V.uGlobal.uFile(v.local.iFor)!SNP,V.Local.sVal)
+				F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.local.iFor)!Container,"*!*",V.uGlobal.uFile(v.local.iFor)!ShipTo,"*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,V.Local.sVal)
+				f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+			F.Intrinsic.Control.EndIf
+
+			' regardless of situation, if po was used before, don't create a new order line for it
+			F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uFile!PO,V.uGlobal.uFile(v.Local.iFor)!PO)
+
+		F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+
+' look for blank ship to
+F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uFile!ShipTo,"",V.Local.sRetA)
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uFile!ShipTo,"")
+F.Intrinsic.Control.If(V.Local.sRetA.Trim,<>,"")
+	F.Intrinsic.String.Split(V.Local.sRetA,"*!*",V.Local.sRetA)
+	F.Intrinsic.Control.For(V.Local.iFor,V.Local.sRetA.LBound,V.Local.sRetA.UBound,1)
+		F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Item,"*!*","SHP","*!*","Missing Ship To","*!*","N/A","*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Deliver,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!PO,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Description,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Ordered,V.Local.sVal)
+		F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!InTransit,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Receipts,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!NetDue,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!SNP,V.Local.sVal)
+		F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Container,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!ShipTo,"*!*",V.uGlobal.uFile(V.Local.sRetA(v.local.iFor))!Deliver,V.Local.sVal)
+		f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+
+	F.Intrinsic.Control.Next(V.Local.iFor)
+F.Intrinsic.Control.EndIf
+
+' delete pos that have been flagged
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFile)
+
+
+' reset list of distinct pos
+F.Intrinsic.Variable.UDTCopy(V.uGlobal.uFile,V.uGlobal.uPOCopy,False)
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.uPOCopy!PO)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uPOCopy)
+
+
+Program.Sub.PartPOVerify.End
+
+
+Program.Sub.createUpload.Start
+
+V.Local.sFile.Declare(String)
+V.Local.iRow.Declare(Long)
+V.Local.i.Declare(Long)
+V.Local.iHead.Declare(Long)
+V.Local.iHeadCt.Declare(Long)
+V.Local.sRow.Declare(String)
+V.Local.sCol.Declare(String)
+V.Local.iSheet.Declare(Long)
+V.Local.sTemp.Declare(String)
+V.Local.sPO.Declare(String)
+V.Local.iLine.Declare(Long)
+V.Local.iHLine.Declare(Long)
+V.Local.sLine.Declare(String)
+V.Local.sHLine.Declare(String)
+V.Local.sCustPart.Declare(String)
+V.Local.sCustID.Declare(String)
+V.Local.sBuyerID.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sShipDate.Declare(String)
+V.Local.iOrderQty.Declare(Long)
+V.Local.sQty.Declare(String)
+V.Local.sOrderQty.Declare(String)
+V.Local.sHdrFiller.Declare(String)
+V.Local.sLnFiller.Declare(String)
+V.Local.sLnFiller1.Declare(String)
+V.Local.sLnFiller2.Declare(String)
+V.Local.sLnFiller3.Declare(String)
+V.Local.sLnFiller4.Declare(String)
+V.Local.sFileName.Declare(String)
+V.Local.sDescription.Declare(String)
+V.Local.dDaysout.Declare(Date)
+V.Local.sDaysout.Declare(String)
+V.Local.bFileExist.Declare(Boolean,False)
+V.Local.bCheck.Declare(Boolean,False)
+V.Local.sLnFiller0.Declare(String)
+V.Local.iFor.Declare(Long)
+V.Local.sRet.Declare(String)
+V.Local.sStatus.Declare(String)
+V.Local.sVal.Declare(String)
+V.Local.sShipTo.Declare(String)
+V.Local.sHShipTo.Declare(String)
+V.Local.sSel.Declare(String)
+V.Local.iHndl.Declare(Long)
+
+F.Intrinsic.String.Concat(V.Caller.FilesDir,"\","EA850",V.Caller.CompanyCode,V.Local.sFileName)
+F.Intrinsic.File.Exists(V.Local.sFileName,V.Local.bFileExist)
+F.Intrinsic.Control.If(V.Local.bFileExist,=,True)
+	F.Intrinsic.File.DeleteFile(V.Local.sFileName)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.File.GetHandle(V.Local.iHndl)
+
+' Non required fields spacing - For Header
+F.Intrinsic.String.RPad(V.Local.sHdrFiller," ",354,V.Local.sHdrFiller)
+
+' Non required fields spacing - For Lines
+F.Intrinsic.String.RPad(V.Local.sLnFiller," ",2,V.Local.sLnFiller)
+F.Intrinsic.String.RPad(V.Local.sLnFiller0," ",15,V.Local.sLnFiller0)
+F.Intrinsic.String.RPad(V.Local.sLnFiller1," ",133,V.Local.sLnFiller1)
+F.Intrinsic.String.RPad(V.Local.sLnFiller2," ",199,V.Local.sLnFiller2)
+F.Intrinsic.String.RPad(V.Local.sLnFiller3," ",28,V.Local.sLnFiller3)
+F.Intrinsic.String.RPad(V.Local.sLnFiller4," ",1,V.Local.sLnFiller4)
+
+F.Intrinsic.File.OpenForWrite(V.Local.sFileName,V.Local.iHndl)
+
+F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.uPOCopy!PO.LBound,V.uGlobal.uPOCopy!PO.UBound,1)
+
+	F.Intrinsic.String.Concat("Creating EA850",V.Caller.CompanyCode," File",V.Ambient.NewLine,"PO ",V.Local.iFor," of ",V.uGlobal.uPOCopy!PO.UBound,V.Local.sSel)
+	F.Intrinsic.UI.ChangeWaitStatus(V.Local.sSel)
+
+' ================HEADER===============
+	' Buyer
+	F.Intrinsic.String.Concat("select ID,M_Ship_Seq from Cust_Xref where Loc='",V.uGlobal.uPOCopy(v.Local.iFor)!ShipTo,"'",V.Local.sSel)
+	f.ODBC.Connection!Con.ExecuteAndReturn(v.Local.sSel,v.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,<>,"")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		V.Local.sBuyerID.Set(V.Local.sRet(0))
+'		V.Local.sShipTo.Set(V.Local.sRet(1))
+	F.Intrinsic.Control.Else
+		V.Local.sBuyerID.Set("")
+'		V.Local.sShipTo.Set("")
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.RPad(V.Local.sBuyerID," ",35,V.Local.sBuyerID)
+
+	'PO Number
+	F.Intrinsic.String.Split(V.uGlobal.uPOCopy(v.Local.iFor)!PO,"*",V.Local.sPO)
+	F.Intrinsic.String.RPad(V.Local.sPO(0).Trim," ",15,V.Local.sPO)
+
+	' first header rec Number will be 000
+	' header should always be 000
+	V.Local.iHead.Set(0)
+	V.Local.iHeadCt.Set(-1)
+	V.Local.sHLine.Set("000")
+
+	' ship to
+	V.Local.sHShipTo.Set(V.uGlobal.uPOCopy(v.Local.iFor)!ShipTo)
+	F.Intrinsic.String.RPad(V.Local.sHShipTo," ",76,V.Local.sHShipTo)
+
+	F.Intrinsic.String.Format(V.uGlobal.uPOCopy(v.Local.iFor)!Deliver,"yyyymmdd",V.Local.sShipDate)
+
+	'Concat Header Row
+	' Buyer(35), PO(15), Line(3), Change(1), Blank(456), H(1), Blank(1)
+	F.Intrinsic.String.Concat(V.Local.sBuyerID,V.Local.sPO,V.Local.sHLine," ",V.Local.sShipDate,"        ",V.Local.sHShipTo,"0000000000",V.Local.sHdrFiller,"H ",V.Local.sTemp)
+	F.Intrinsic.File.WriteLine(V.Local.iHndl,V.Local.sTemp)
+' =================LINES===================
+	' first line by PO is 001
+	V.Local.iLine.Set(0)
+	V.Local.iHeadCt.Set(0)
+
+	' look for all lines for the current po
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uFile!PO,V.uGlobal.uPOCopy(v.Local.iFor)!PO,V.Local.sRet)
+
+	' should get at least one line return, but check, just in case
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,<>,"")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		F.Intrinsic.Control.For(V.Local.i,V.Local.sRet.LBound,V.Local.sRet.UBound,1)
+
+			F.Intrinsic.String.Concat("Creating EA850",V.Caller.CompanyCode," File",V.Ambient.NewLine,"Line ",V.Local.i," of ",V.Local.sRet.UBound,V.Local.sSel)
+			F.Intrinsic.UI.ChangeWaitStatus(V.Local.sSel)
+		
+			' can only have 999 lines per header
+			F.Intrinsic.Math.Add(V.Local.iHead,1,V.Local.iHead)
+			F.Intrinsic.Control.If(V.Local.iHead,>,999)
+				F.Intrinsic.String.Concat(V.Local.sBuyerID,V.Local.sPO,V.Local.sHLine," ",V.Local.sShipDate,"        ",V.Local.sHShipTo,"0000000000",V.Local.sHdrFiller,"H ",V.Local.sTemp)
+				F.Intrinsic.File.WriteLine(V.Local.iHndl,V.Local.sTemp)
+				V.Local.iLine.Set(0)
+				V.Local.iHead.Set(0)
+			F.Intrinsic.Control.EndIf
+
+			'Line Number
+			F.Intrinsic.Math.Add(V.Local.iLine,1,V.Local.iLine)
+			F.Intrinsic.String.LPad(V.Local.iLine,"0",3,V.Local.sLine)
+			F.Intrinsic.String.LPad(V.Local.sLine,"0",3,V.Local.sLine)
+
+			'Customer Part
+			F.Intrinsic.String.RPad(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Item," ",20,V.Local.sCustPart)
+
+			' Status
+			V.Local.sVal.Set(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Status)
+			F.Intrinsic.Control.If(V.Local.sVal.UCase,=,"IN TRANSIT")
+				V.Local.sStatus.Set("")
+			F.Intrinsic.Control.ElseIf(V.Local.sVal.UCase,=,"PLANNED")
+				V.Local.sStatus.Set("P")
+'			F.Intrinsic.Control.ElseIf(V.Local.sVal.UCase,=,"PENDING")
+'				V.Local.sStatus.Set("P")
+			F.Intrinsic.Control.Else
+				V.Local.sStatus.Set("F")
+			F.Intrinsic.Control.EndIf
+
+			'Order qty
+			' check for decimal.  It will be implied on the upload txt
+			F.Intrinsic.String.Instr(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Ordered,".",V.Local.iOrderQty)
+			F.Intrinsic.Control.If(V.Local.iOrderQty,>,0)
+				F.Intrinsic.String.Split(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Ordered,".",V.Local.sOrderQty)
+				F.Intrinsic.String.LPad(V.Local.sOrderQty(0),"0",8,V.Local.sOrderQty(0))
+				F.Intrinsic.String.RPad(V.Local.sOrderQty(1),"0",4,V.Local.sOrderQty(1))
+				F.Intrinsic.String.Concat(V.Local.sOrderQty(0),V.Local.sOrderQty(1),V.Local.sQty)
+			F.Intrinsic.Control.Else
+				V.Local.sQty.Set(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Ordered)
+				F.Intrinsic.String.LPad(V.Local.sQty,"0",8,V.Local.sQty)
+				F.Intrinsic.String.RPad(V.Local.sQty,"0",12,V.Local.sQty)
+			F.Intrinsic.Control.EndIf
+
+			'Description
+			F.Intrinsic.String.RPad(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Description," ",30,V.Local.sDescription)
+
+			'Item Promise Date
+			F.Intrinsic.String.Format(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!Deliver,"yyyymmdd",V.Local.sShipDate)
+
+			' ship to
+			F.Intrinsic.String.RPad(V.uGlobal.uFile(v.Local.sRet(v.Local.i))!ShipTo," ",17,V.Local.sShipTo)
+
+			'create line record firm
+			' Buyer(35), PO(15), Line(3), Change(1), Part(20), Blank(2), Qty(12), Blank(15),Description(30), Blank(133), Due Date(8), Status(1), ShipTo(17), Blank(182), Promise Date(8), Blank(28), L(1), Blank(1)
+			F.Intrinsic.String.Concat(V.Local.sBuyerID,V.Local.sPO,V.Local.sLine," ",V.Local.sCustPart,V.Local.sLnFiller,V.Local.sQty,V.Local.sLnFiller0,V.Local.sDescription,V.Local.sLnFiller1,"        ",V.Local.sStatus,V.Local.sLnFiller2,V.Local.sShipDate,V.Local.sLnFiller3,"1",V.Local.sLnFiller4,V.Local.sTemp)
+			F.Intrinsic.File.WriteLine(V.Local.iHndl,V.Local.sTemp)
+
+
+		F.Intrinsic.Control.Next(V.Local.i)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+F.Intrinsic.Debug.Stop
+
+F.Intrinsic.File.CloseFile(V.Local.iHndl)
+
+Program.Sub.createUpload.End
+
+
+Program.Sub.UsrFldUpdate.Start
+
+V.Local.iFor.Declare(Long)
+V.Local.sSel.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.iRedim.Declare(Long)
+V.Local.sVal.Declare(String)
+
+' just need one record per part
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.uFile!Item)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFile)
+
+' may have exceptions, prepare to redim
+V.Local.iRedim.Set(V.uGlobal.uUplEx.UBound)
+
+''F.Intrinsic.Variable.UDTFlagAll(V.uGlobal.uFile)
+F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.uFile!Item.LBound,V.uGlobal.uFile!Item.UBound,1)
+	F.Intrinsic.String.Concat("select Text_Info1, Text_Info2  from Inventory_Mst2 where Part ='",V.uGlobal.uFile(v.Local.iFor)!Item,"' ",V.Local.sSel)
+	Function.ODBC.Connection!Con.ExecuteAndReturn(v.Local.sSel,v.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,<>,"")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		V.Local.sRet.RedimPreserve(0,1)
+
+		' container should be info2
+		F.Intrinsic.Control.If(V.uGlobal.uFile(v.Local.iFor)!Container,<>,V.Local.sRet(1))
+
+			' set blank previous value to "N/A"
+			F.Intrinsic.Control.If(V.Local.sRet(1).Trim,=,"")
+				V.Local.sRet(1).Set("N/A")
+			F.Intrinsic.Control.EndIf
+
+			F.Intrinsic.String.Concat("update Inventory_Mst2 set Text_Info2 ='",V.uGlobal.uFile(v.Local.iFor)!Container,"' where Part='",V.uGlobal.uFile(v.Local.iFor)!Item,"'  ",V.Local.sSel)
+			F.ODBC.Connection!Con.Execute(V.Local.sSel)
+
+			' add exception
+			F.Intrinsic.Control.If(V.uGlobal.uUplEx.UBound,=,-1)
+				V.uGlobal.uUplEx.Redim(0,0)
+				F.Intrinsic.Math.Add(V.Local.iRedim,1,V.Local.iRedim)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.Math.Add(V.Local.iRedim,1,V.Local.iRedim)
+				V.uGlobal.uUplEx.RedimPreserve(0,V.Local.iRedim)
+			F.Intrinsic.Control.EndIf
+
+			F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(v.Local.iFor)!Item,"*!*","CNT","*!*","Change in Container","*!*",V.Local.sRet(1),"*!*",V.uGlobal.uFile(v.Local.iFor)!Container,"*!*",V.uGlobal.uFile(v.Local.iFor)!PO,"*!*",V.uGlobal.uFile(v.Local.iFor)!Description,"*!*",V.uGlobal.uFile(v.Local.iFor)!Ordered,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.iFor)!InTransit,"*!*",V.uGlobal.uFile(v.Local.iFor)!Receipts,"*!*",V.uGlobal.uFile(v.Local.iFor)!NetDue,"*!*",V.uGlobal.uFile(v.Local.iFor)!SNP,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.iFor)!Container,"*!*",V.uGlobal.uFile(v.Local.iFor)!ShipTo,"*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,V.Local.sVal)
+			f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+		F.Intrinsic.Control.EndIf
+
+		' SNP should be info1
+		F.Intrinsic.Control.If(V.uGlobal.uFile(v.Local.iFor)!SNP,<>,V.Local.sRet(0).Long)
+
+			' set blank previous value to "N/A"
+			F.Intrinsic.Control.If(V.Local.sRet(0).Trim,=,"")
+				V.Local.sRet(0).Set("N/A")
+			F.Intrinsic.Control.EndIf
+
+			' add exception
+			F.Intrinsic.Control.If(V.uGlobal.uUplEx.UBound,=,-1)
+				V.uGlobal.uUplEx.Redim(0,0)
+				F.Intrinsic.Math.Add(V.Local.iRedim,1,V.Local.iRedim)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.Math.Add(V.Local.iRedim,1,V.Local.iRedim)
+				V.uGlobal.uUplEx.RedimPreserve(0,V.Local.iRedim)
+			F.Intrinsic.Control.EndIf
+
+			F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.uGlobal.uFile(v.Local.iFor)!Item,"*!*","SNP","*!*","Change in Qty_Order","*!*",V.Local.sRet(0),"*!*",V.uGlobal.uFile(v.Local.iFor)!SNP,"*!*",V.uGlobal.uFile(v.Local.iFor)!PO,"*!*",V.uGlobal.uFile(v.Local.iFor)!Description,"*!*",V.uGlobal.uFile(v.Local.iFor)!Ordered,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.iFor)!InTransit,"*!*",V.uGlobal.uFile(v.Local.iFor)!Receipts,"*!*",V.uGlobal.uFile(v.Local.iFor)!NetDue,"*!*",V.uGlobal.uFile(v.Local.iFor)!SNP,V.Local.sVal)
+			F.Intrinsic.String.Concat(V.Local.sVal,"*!*",V.uGlobal.uFile(v.Local.iFor)!Container,"*!*",V.uGlobal.uFile(v.Local.iFor)!ShipTo,"*!*",V.uGlobal.uFile(v.Local.iFor)!Deliver,V.Local.sVal)
+			f.Intrinsic.Variable.LoadUDTFromString(v.uGlobal.uUplEx,"Trmnl*!*Part*!*Discr_Code*!*Discrepancy*!*Prev_Value*!*Chng_Value*!*PO*!*Description*!*Ordered*!*In_Transit*!*Receipts*!*Net_Due*!*SNP*!*Container*!*Ship_To*!*Deliver",v.Local.sVal,"","*!*",true,1)
+
+		F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+' remove records with no part
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uUplEx!Part,"")
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uUplEx)
+
+
+' fi there are any discrepancies
+F.Intrinsic.Control.If(V.uGlobal.uUplEx!Part.UBound,>,-1)
+
+	' if there are SNP diescrepancies
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uUplEx!Discr_Code,"SNP",V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,<>,"")
+
+		' make a copy of the ex udt to make it easy to just load SNP exceptions to the grid, but for now only save non-SNP records to the table
+		F.Intrinsic.Variable.UDTCopy(V.uGlobal.uUplEx,V.uGlobal.uUplExCopy,False)
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uUplExCopy!Discr_Code,"<>::SNP")
+		F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uUplExCopy)
+
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uUplEx!Discr_Code,"SNP")
+		F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uUplEx)
+	F.Intrinsic.Control.EndIf
+
+	' save all but SNP discrepancies to the table, here
+	F.ODBC.Connection!Con.OpenRecordsetRW("rstSel","select * from GCG_3346_Upl_Exceptions")
+		F.Intrinsic.Variable.SaveUDTToRecordset("Con","rstSel","v.uGlobal.uUplEx")
+	F.ODBC.Con!rstSel.Close
+
+	F.Intrinsic.UI.CloseWaitDialog
+	' if there are SNP diescrepancies, open maintenance table
+	F.Intrinsic.Control.If(V.uGlobal.uUplExCopy.UBound,>,-1)
+		F.Intrinsic.Control.CallSub(Buildgrid)
+		Gui.Form1..Show
+	F.Intrinsic.Control.Else
+		F.Intrinsic.Control.CallSub(Printreport)
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Else
+	F.Intrinsic.Control.CallSub(Unload)
+F.Intrinsic.Control.EndIf
+
+Program.Sub.UsrFldUpdate.End
+
+
+program.sub.gsflexgrid1_cellenter.start
+
+
+V.Local.sSel.Declare(String)
+V.Local.iFor.Declare(Long)
+V.Local.iMaxRow.Declare(Long)
+
+
+' max row will be 1 less than total rows because of header
+F.Intrinsic.Math.Sub(V.Screen.Form1!gsflexgrid1.Rows,1,V.Local.iMaxRow)
+
+'only if header row is clicked
+F.Intrinsic.Control.If(V.Args.KEY,=,1)
+	F.Intrinsic.Control.If(V.Args.COLUMN,=,0)
+
+		' if sorted asc, change to desc and vice versa
+		F.Intrinsic.Control.If(V.Global.bAscSort,=,True)
+			F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uUplExCopy!Part,True)
+			V.Global.bAscSort.Set(False)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uUplExCopy!Part,False)
+			V.Global.bAscSort.Set(True)
+		F.Intrinsic.Control.EndIf
+
+		' redim the grid
+		Gui.Form1.gsflexgrid1.FixedRows(1)
+		Gui.Form1.gsflexgrid1.TextMatrix(0,1,"")
+		Gui.Form1.gsflexgrid1.TextMatrix(1,1,"")
+		Gui.Form1.gsflexgrid1.TextMatrix(2,1,"")
+
+		Gui.Form1.gsflexgrid1.LoadFromUDT("V.uGlobal.uUplExCopy","Part*!*Prev_Value*!*Chng_Value",1)
+
+	F.Intrinsic.Control.ElseIf(V.Args.COLUMN,=,1)
+
+		F.Intrinsic.Control.If(V.Global.bAscSort,=,True)
+			F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uUplExCopy!Prev_Value,False,V.uGlobal.uUplExCopy!Part,False)
+			V.Global.bAscSort.Set(False)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uUplExCopy!Prev_Value,True,V.uGlobal.uUplExCopy!Part,False)
+			V.Global.bAscSort.Set(True)
+		F.Intrinsic.Control.EndIf
+
+		' redim the grid
+		Gui.Form1.gsflexgrid1.FixedRows(1)
+		Gui.Form1.gsflexgrid1.TextMatrix(0,1,"")
+		Gui.Form1.gsflexgrid1.TextMatrix(1,1,"")
+		Gui.Form1.gsflexgrid1.TextMatrix(2,1,"")
+
+		Gui.Form1.gsflexgrid1.LoadFromUDT("V.uGlobal.uUplExCopy","Part*!*Prev_Value*!*Chng_Value",1)
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.EndIf
+
+
+
+program.sub.gsflexgrid1_cellenter.end
+
+
+program.sub.cmdupdate_click.start
+
+Gui.Form1..Visible(false)
+
+V.Local.iFor.Declare(Long)
+V.Local.iRows.Declare(Long)
+V.Local.iVal.Declare(Long)
+V.Local.sSel.Declare(String)
+V.Local.sSnp.Declare(String)
+V.Local.sPart.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.Math.Sub(V.Screen.Form1!gsflexgrid1.Rows,1,V.Local.iRows)
+
+' see which lines have been checked and update the info 1 for those parts
+F.Intrinsic.Control.For(V.Local.iFor,1,V.Local.iRows,1)
+	Gui.Form1.gsflexgrid1.GetTextMatrix(3,V.Local.iFor,V.Local.iVal)
+	Gui.Form1.gsflexgrid1.GetTextMatrix(0,V.Local.iFor,V.Local.sPart)
+	Gui.Form1.gsflexgrid1.GetTextMatrix(2,V.Local.iFor,V.Local.sSnp)
+
+	F.Intrinsic.Control.If(V.Local.iVal,=,1)
+		F.Intrinsic.String.Concat("update Inventory_Mst2 set Text_Info1 ='",V.Local.sSnp,"' where Part='",V.Local.sPart,"'  ",V.Local.sSel)
+		F.ODBC.Connection!Con.Execute(V.Local.sSel)
+
+	F.Intrinsic.Control.Else
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uUplExCopy!Part,V.Local.sPart)
+
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uUplExCopy)
+
+F.Intrinsic.Control.If(V.uGlobal.uUplExCopy!Container.UBound,>,-1)
+	F.ODBC.Connection!Con.OpenRecordsetRW("rstSel","select * from GCG_3346_Upl_Exceptions")
+		F.Intrinsic.Variable.SaveUDTToRecordset("Con","rstSel","v.uGlobal.uUplExCopy")
+	F.ODBC.Con!rstSel.Close
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(Printreport)
+
+program.sub.cmdupdate_click.end
+
+
+Program.Sub.buildGrid.Start
+
+' don't need this past this point, so redimming to make iteasier during debugging
+V.uGlobal.uFile.Redim(-1,-1)
+V.uGlobal.uInvCopy.Redim(-1,-1)
+V.uGlobal.uInvMstr.Redim(-1,-1)
+V.uGlobal.uPO.Redim(-1,-1)
+V.uGlobal.uPOCopy.Redim(-1,-1)
+V.uGlobal.uUplEx.Redim(-1,-1)
+
+V.Local.iFor.Declare(Long)
+V.Local.iRows.Declare(Long)
+
+Gui.Form1.gsflexgrid1.Cols(4)
+
+Gui.Form1.gsflexgrid1.BuildStyle(1,0,"Type","Locked",True)
+Gui.Form1.gsflexgrid1.BuildStyle(1,1,"Type","Locked",True)
+Gui.Form1.gsflexgrid1.BuildStyle(1,2,"Type","Locked",True)
+Gui.Form1.gsflexgrid1.BuildStyle(1,3,"Type","Checkbox",True)
+
+Gui.Form1.gsflexgrid1.ColWidth(0,2500)
+Gui.Form1.gsflexgrid1.ColWidth(1,1500)
+Gui.Form1.gsflexgrid1.ColWidth(2,1500)
+
+' pre sort by part ascending
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uUplExCopy!Part,False)
+Gui.Form1.gsflexgrid1.LoadFromUDT("V.uGlobal.uUplExCopy","Part*!*Prev_Value*!*Chng_Value",1)
+
+Gui.Form1.gsflexgrid1.FixedRows(1)
+Gui.Form1.gsflexgrid1.TextMatrix(0,0,"Part")
+Gui.Form1.gsflexgrid1.TextMatrix(1,0,"SNP Global")
+Gui.Form1.gsflexgrid1.TextMatrix(2,0,"SNP KSL")
+Gui.Form1.gsflexgrid1.TextMatrix(3,0,"Update")
+
+' subtract 1 because grid is zero based
+F.Intrinsic.Math.Sub(V.Screen.Form1!gsflexgrid1.Rows,1,V.Local.iRows)
+
+' default all boxes to checked
+F.Intrinsic.Control.For(V.Local.iFor,1,V.Local.iRows,1)
+	Gui.Form1.gsflexgrid1.TextMatrix(3,V.Local.iFor,1)
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+
+
+Program.Sub.buildGrid.End
+
+
+Program.Sub.printReport.Start
+
+V.Local.sRptPath.Declare(String)
+V.Local.iRptId.Declare(Long)
+V.Local.sParams.Declare(String)
+V.Local.sValues.Declare(String)
+V.Local.sSel.Declare(String)
+V.Local.sRet.Declare(String)
+
+V.Local.sParams.Set("Trmnl")
+V.Local.sValues.Set(V.Caller.Terminal)
+
+F.Intrinsic.String.Concat("select * from GCG_3346_Upl_Exceptions where Trmnl='",V.Caller.Terminal,"'",V.Local.sSel)
+f.ODBC.Connection!Con.ExecuteAndReturn(v.Local.sSel,v.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim,<>,"")
+	F.Intrinsic.String.Concat(V.Caller.BusintDir,"\Custom\GCG_3346_Upload_Exceptions.rpt",V.Local.sRptPath)
+	'F.Global.BI.GetIDFromName(V.Local.sRptPath,V.Local.iRptId)
+	F.Global.BI.InitializeReport("GCG_3346_Upload_Exceptions.rpt",V.Local.sRptPath,V.Local.iRptId)
+	F.Global.BI.PrintReport(V.Local.iRptId,0,V.Local.sParams,V.Local.sValues,"",False)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(Unload)
+
+
+Program.Sub.printReport.End
+
+
+program.sub.form1_unload.start
+
+
+Gui.Form1..Visible(false)
+
+'F.ODBC.Connection!Con.OpenRecordsetRW("rstSel","select * from GCG_3346_Upl_Exceptions")
+'	F.Intrinsic.Variable.SaveUDTToRecordset("Con","rstSel","v.uGlobal.uUplExCopy")
+'F.ODBC.Con!rstSel.Close
+
+' don't want t print SNP exceptions, if they unloaded from the screen without updating
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uUplExCopy!Discr_Code,"SNP")
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uUplExCopy)
+
+F.Intrinsic.Control.CallSub(Printreport)
+
+program.sub.form1_unload.end
+
+
+Program.Sub.Comments.Start
+${$0$}$GCG_EDI_Upload_MET$}$JCT$}$3/27/2013
+${$3$}$0$}$$}$-1$}$-1$}$$}$1/1/1900$}$Custom EDI upload for Metalflex
+
+Program.Sub.Comments.End
+
